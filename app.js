@@ -66,8 +66,8 @@ const state = {
     previewMesh: null,
     // Palm expansion
     heartExpanded: false,
-    targetHeartScale: 1.0,
-    currentHeartScale: 1.0,
+    targetHeartScale: 0.3,
+    currentHeartScale: 0.3,
 };
 
 // ──── DOM Elements ────
@@ -837,12 +837,13 @@ function onHandResults(results) {
             grabFrameCount = 0;
             palmFrameCount = 0;
 
-            // ── PALM: Expand heart big + close preview ──
+            // ── PALM: Expand heart ──
         } else if (gesture === 'palm') {
             palmFrameCount++;
             if (palmFrameCount >= 2) {
                 state.heartExpanded = true;
-                state.targetHeartScale = 1.8;
+                // First palm opens to full size, sustained palm expands bigger
+                state.targetHeartScale = palmFrameCount >= 15 ? 1.8 : 1.0;
                 state.targetGlow = CONFIG.warmGlow;
             }
             if (palmFrameCount >= 5 && state.previewOpen) {
@@ -861,9 +862,9 @@ function onHandResults(results) {
             }
             palmFrameCount = 0;
             state.lastPinchDist = null;
-            // Contract heart
+            // Contract heart back to small
             state.heartExpanded = false;
-            state.targetHeartScale = 1.0;
+            state.targetHeartScale = 0.5;
             state.targetGlow = CONFIG.normalGlow;
 
             // ── DEFAULT ──
@@ -908,7 +909,7 @@ function onHandResults(results) {
 
         // Contract heart back
         state.heartExpanded = false;
-        state.targetHeartScale = 1.0;
+        state.targetHeartScale = 0.3;
         state.targetGlow = CONFIG.normalGlow;
 
         if (state.highlightedMesh) {
