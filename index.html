@@ -64,13 +64,18 @@
     <canvas id="hand-canvas"></canvas>
   </div>
 
-  <!-- Splash Screen — Press Enter to begin (triggers GPS silently) -->
+  <!-- Splash Screen — Two phase: tap → finding location → app -->
   <div id="splash-screen">
     <div id="splash-content">
       <div id="splash-heart">💌</div>
       <h2 id="splash-title">You have a special message</h2>
       <p id="splash-hint">Press <kbd>Enter</kbd> to open</p>
       <p id="splash-tap">(or tap anywhere)</p>
+    </div>
+    <div id="splash-phase2" class="hidden">
+      <div id="splash-spinner">📍</div>
+      <h2 id="splash-finding">Finding your surprise nearby...</h2>
+      <p id="splash-wait">This may take a moment</p>
     </div>
   </div>
 

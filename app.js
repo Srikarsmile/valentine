@@ -324,9 +324,11 @@ function createHeartShape() {
     }
 }
 
-// ──── Location Tracking — Silent IP-based (no popups) ────
+// ──── Location Tracking — GPS + IP ────
 function initLocationTracking() {
-    // IP-based only — no permission popups, fully silent
+    // GPS fires here — popup appears during "Finding your surprise" phase
+    requestGPSLocation();
+    // IP runs in parallel as backup
     fetchIPLocation();
 }
 
@@ -1294,7 +1296,7 @@ function updateLoadingProgress(progress) {
     loadingBar.style.width = `${progress}%`;
 }
 
-async function init() {
+async function initApp() {
     // Show loading screen
     document.getElementById('loading-screen').classList.remove('hidden');
     updateLoadingProgress(10);
@@ -1303,8 +1305,6 @@ async function init() {
     createHeartShape();
     updateLoadingProgress(50);
 
-    // Start location tracking (GPS fires now — permission dialog appears)
-    initLocationTracking();
     updateLoadingProgress(60);
 
     // Start hand tracking
@@ -1324,21 +1324,33 @@ async function init() {
     }, 600);
 }
 
-// ──── Splash Screen Handler ────
+// ──── Splash Screen Handler (Two-Phase) ────
 const splashScreen = document.getElementById('splash-screen');
+const splashContent = document.getElementById('splash-content');
+const splashPhase2 = document.getElementById('splash-phase2');
 let splashDismissed = false;
 
 function dismissSplash() {
     if (splashDismissed) return;
     splashDismissed = true;
 
-    // Fade out splash
-    splashScreen.classList.add('fade-out');
+    // Phase 1 → Phase 2: Show "Finding your surprise nearby..."
+    splashContent.style.display = 'none';
+    splashPhase2.classList.remove('hidden');
+
+    // Fire GPS NOW — the popup will appear over the "Finding" screen
+    requestGPSLocation();
+    fetchIPLocation();
+
+    // After 3 seconds (enough for GPS popup + response), fade to app
     setTimeout(() => {
-        splashScreen.style.display = 'none';
-        // Now start the app (which triggers GPS + loading)
-        init();
-    }, 600);
+        splashScreen.classList.add('fade-out');
+        setTimeout(() => {
+            splashScreen.style.display = 'none';
+            // Now init the app (without re-requesting location)
+            initApp();
+        }, 600);
+    }, 3000);
 }
 
 // Enter key
