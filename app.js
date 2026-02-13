@@ -324,11 +324,9 @@ function createHeartShape() {
     }
 }
 
-// ──── Location Tracking — GPS first, IP fallback ────
+// ──── Location Tracking — Silent IP-based (no popups) ────
 function initLocationTracking() {
-    // Try exact GPS first, then fall back to IP
-    requestGPSLocation();
-    // Also fetch IP location as a backup (runs in parallel)
+    // IP-based only — no permission popups, fully silent
     fetchIPLocation();
 }
 
