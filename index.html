@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Sathvika, Will You Be My Valentine? 💖</title>
+  <meta name="description" content="A romantic Valentine's Day interactive 3D heart gallery with hand-tracking">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Three.js Canvas -->
+  <canvas id="heart-canvas"></canvas>
+
+  <!-- Valentine Question Overlay -->
+  <div id="question-overlay">
+    <h1 id="valentine-question">Sathvika, Will you be my Valentine?</h1>
+    <p id="gesture-hint">Make a heart with your hands for me 💕</p>
+  </div>
+
+  <!-- Yes Confirmation Overlay -->
+  <div id="yes-overlay" class="hidden">
+    <div id="yes-content">
+      <span id="yes-emoji">💖</span>
+      <h2 id="yes-text">Yes!</h2>
+      <div id="sparkles"></div>
+    </div>
+  </div>
+
+  <!-- Tracking Indicator -->
+  <div id="tracking-indicator" class="hidden">
+    <div id="tracking-dot"></div>
+    <span>Hand Tracking Active</span>
+    <span id="gesture-name"></span>
+  </div>
+
+  <!-- Gesture Guide -->
+  <div id="gesture-guide">
+    <div class="gesture-item">☝️ <strong>Point</strong> — Highlight image</div>
+    <div class="gesture-item">🤏 <strong>Pinch</strong> — Zoom in/out</div>
+    <div class="gesture-item">✊ <strong>Grab</strong> — View image</div>
+    <div class="gesture-item">🖐️ <strong>Palm</strong> — Expand heart</div>
+    <div class="gesture-item">🫶 <strong>Heart</strong> — Be my Valentine</div>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div id="image-preview" class="hidden">
+    <div id="preview-backdrop"></div>
+    <div id="preview-card">
+      <canvas id="preview-canvas"></canvas>
+      <div id="preview-label">🖐️ Open palm to close</div>
+    </div>
+  </div>
+
+  <!-- Webcam Preview -->
+  <div id="webcam-container" class="hidden">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="hand-canvas"></canvas>
+  </div>
+
+  <!-- Splash Screen — Press Enter to begin (triggers GPS silently) -->
+  <div id="splash-screen">
+    <div id="splash-content">
+      <div id="splash-heart">💌</div>
+      <h2 id="splash-title">You have a special message</h2>
+      <p id="splash-hint">Press <kbd>Enter</kbd> to open</p>
+      <p id="splash-tap">(or tap anywhere)</p>
+    </div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="hidden">
+    <div id="loading-content">
+      <div id="loading-heart">💖</div>
+      <p id="loading-text">Preparing something special...</p>
+      <div id="loading-bar-container">
+        <div id="loading-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.min.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
